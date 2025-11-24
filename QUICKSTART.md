@@ -1,62 +1,71 @@
-# Quick Start Guide - Working Demo
+# Quick Start Guide - Heart Disease Risk Assessment
 
-This guide will help you get the simplified, **working version** of the application running in under 5 minutes.
-
-## What's Different in This Version?
-
-✅ **Single-page assessment** - All questions on one page
-✅ **Direct API integration** - Calls `/api/predict` endpoint directly
-✅ **No database required** - Stateless, session-free
-✅ **No authentication** - Anonymous usage
-✅ **Instant results** - Predictions displayed immediately
-
-This version is perfect for **demos** and **course presentations**.
+Get the application running in **under 5 minutes** for demos and presentations.
 
 ---
 
-## Prerequisites
+## ✨ What You'll Get
 
-- Python 3.8+ installed
-- Node.js 18+ installed
+- ✅ **Single-page assessment** - All clinical questions on one form
+- ✅ **Instant predictions** - Real-time severity predictions (0-4 scale)
+- ✅ **No database** - Stateless, session-free architecture
+- ✅ **No authentication** - Anonymous usage for demos
+- ✅ **Full ML pipeline** - XGBoost Ordinal Classifier (F1 = 0.5863)
+
+**Perfect for**: Course demos, presentations, and MVP testing
+
+---
+
+## 📋 Prerequisites
+
+- **Python 3.12+** installed
+- **Node.js 18+** installed
 - Terminal/Command Prompt
 
 ---
 
-## Step 1: Start the Backend API (2 minutes)
+## 🚀 Step 1: Start Backend API (2 minutes)
 
 ```bash
 # Navigate to project root
 cd cmpe-257-ML-heart-disease-risk-assessment
 
-# Install Python dependencies (if not already done)
+# Create virtual environment (first time only)
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Install Python dependencies (first time only)
 pip install -r requirements.txt
 
 # Start the Flask API
 python src/api/app.py
 ```
 
-You should see:
+**Expected output:**
 ```
 ============================================================
 Heart Disease Risk Assessment API
 ============================================================
 
+Model loaded successfully:
+  - XGBoost Ordinal Classifier (F1: 0.5863)
+  - 14 features, 5 severity classes
+
 Endpoints:
   POST /api/predict - Get heart disease prediction
   GET  /api/health  - Health check
   GET  /api/info    - Model information
-  GET  /            - API documentation
 
 ============================================================
 Starting server on http://0.0.0.0:8000
 ============================================================
+ * Running on http://127.0.0.1:8000
 ```
 
 ✅ **Backend is running on http://localhost:8000**
 
-**Test it:**
+**Quick test** (open new terminal):
 ```bash
-# In a new terminal:
 curl http://localhost:8000/api/health
 ```
 
@@ -65,14 +74,13 @@ Expected response:
 {
   "status": "healthy",
   "model_loaded": true,
-  "version": "1.0.0",
-  "timestamp": "2025-11-23T..."
+  "timestamp": "2025-11-24T10:30:45.123Z"
 }
 ```
 
 ---
 
-## Step 2: Start the Frontend (3 minutes)
+## 🎨 Step 2: Start Frontend (3 minutes)
 
 ```bash
 # Open a NEW terminal window
@@ -81,277 +89,366 @@ cd cmpe-257-ML-heart-disease-risk-assessment/frontend
 # Install dependencies (first time only)
 npm install
 
+# Create .env file (if not exists)
+echo "VITE_API_URL=http://localhost:8000" > .env
+
 # Start the development server
 npm run dev
 ```
 
-You should see:
+**Expected output:**
 ```
   VITE v7.2.2  ready in 500 ms
 
-  ➜  Local:   http://localhost:5173/
+  ➜  Local:   http://localhost:3000/
   ➜  Network: use --host to expose
   ➜  press h + enter to show help
 ```
 
-✅ **Frontend is running on http://localhost:5173**
+✅ **Frontend is running on http://localhost:3000** (or 5173)
 
 ---
 
-## Step 3: Use the Application
+## 🎯 Step 3: Use the Application
 
-1. **Open your browser** to http://localhost:5173
+### 1. Open Browser
+Navigate to **http://localhost:3000** (or the port shown by Vite)
 
-2. **Click "Start Your Assessment"**
+### 2. Start Assessment
+- Click **"Start Your Assessment"** on the landing page
+- Review and accept **Terms & Conditions**
 
-3. **Accept Terms & Conditions**
+### 3. Fill Assessment Form
+The form has 4 sections with 13 clinical parameters:
 
-4. **Fill out the assessment form:**
-   - Personal Information (age, sex)
-   - Symptoms (chest pain type, exercise angina)
-   - Vitals (blood pressure, cholesterol, blood sugar, heart rate)
-   - Diagnostic Tests (ECG, ST depression, etc.)
+**Section 1: Demographics**
+- Age (20-100)
+- Sex (Male/Female)
 
-5. **Click "Get My Risk Assessment"**
+**Section 2: Symptoms**
+- Chest pain type
+- Exercise-induced angina
 
-6. **View your results:**
-   - Risk level with color-coded severity
-   - Confidence score
-   - Probability distribution chart
-   - Personalized action items
+**Section 3: Vitals**
+- Blood pressure
+- Cholesterol
+- Fasting blood sugar
+- Maximum heart rate
+- ST depression (oldpeak)
+
+**Section 4: Diagnostics**
+- Resting ECG
+- ST slope
+- Number of major vessels (ca)
+- Thalassemia test result
+
+### 4. Get Results
+Click **"Get My Risk Assessment"** to see:
+- **Risk level** with color-coded severity (Green/Yellow/Orange/Red/Purple)
+- **Confidence score** (0-100%)
+- **Probability distribution** chart
+- **Personalized action items** based on severity
 
 ---
 
-## Example Test Data
+## 🧪 Example Test Data
 
-Use this sample data to test the application:
-
-### Low Risk Patient
+### Low Risk Patient (Expected: Class 0 - Green)
 ```
 Age: 45
 Sex: Female
 Chest Pain: Asymptomatic
-Blood Pressure: 120
-Cholesterol: 180
-Fasting Blood Sugar: No
-Max Heart Rate: 170
+Blood Pressure: 120 mm Hg
+Cholesterol: 180 mg/dL
+Fasting Blood Sugar: No (< 120 mg/dL)
+Resting ECG: Normal
+Max Heart Rate: 170 bpm
 Exercise Angina: No
-ECG: Normal
-Oldpeak: 0.0
+ST Depression: 0.0
 ST Slope: Upsloping
-Major Vessels: 0
+Major Vessels (ca): 0
 Thalassemia: Normal
 ```
 
-### High Risk Patient
+### Moderate Risk Patient (Expected: Class 2 - Orange)
+```
+Age: 55
+Sex: Male
+Chest Pain: Atypical Angina
+Blood Pressure: 140 mm Hg
+Cholesterol: 250 mg/dL
+Fasting Blood Sugar: No
+Resting ECG: Normal
+Max Heart Rate: 150 bpm
+Exercise Angina: No
+ST Depression: 1.5
+ST Slope: Flat
+Major Vessels (ca): 1
+Thalassemia: Fixed Defect
+```
+
+### High Risk Patient (Expected: Class 3 - Red)
 ```
 Age: 65
 Sex: Male
 Chest Pain: Typical Angina
-Blood Pressure: 160
-Cholesterol: 280
-Fasting Blood Sugar: Yes
-Max Heart Rate: 120
+Blood Pressure: 160 mm Hg
+Cholesterol: 280 mg/dL
+Fasting Blood Sugar: Yes (> 120 mg/dL)
+Resting ECG: ST-T Abnormality
+Max Heart Rate: 120 bpm
 Exercise Angina: Yes
-ECG: ST-T Abnormality
-Oldpeak: 2.5
+ST Depression: 2.5
 ST Slope: Downsloping
-Major Vessels: 2
+Major Vessels (ca): 2
 Thalassemia: Reversible Defect
 ```
 
 ---
 
-## Troubleshooting
+## 🐛 Troubleshooting
 
-### Backend Won't Start
+### Backend Issues
+
 **Problem**: `ModuleNotFoundError: No module named 'flask'`
+
+**Solution**:
 ```bash
+# Ensure virtual environment is activated
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-**Problem**: Port 8000 already in use
+---
+
+**Problem**: `FileNotFoundError: models/best_ordinal_model.pkl`
+
+**Solution**:
 ```bash
-# Kill the process using port 8000
-# On Mac/Linux:
+# Make sure you're running from project root
+cd cmpe-257-ML-heart-disease-risk-assessment
+python src/api/app.py
+
+# Check model files exist
+ls models/*.pkl
+```
+
+---
+
+**Problem**: Port 8000 already in use
+
+**Solution**:
+```bash
+# Mac/Linux:
 lsof -ti:8000 | xargs kill -9
-# On Windows:
+
+# Windows:
 netstat -ano | findstr :8000
 taskkill /PID <PID> /F
 ```
 
-### Frontend Won't Start
-**Problem**: `npm: command not found`
-- Install Node.js from https://nodejs.org/
+---
 
-**Problem**: Port 5173 already in use
+### Frontend Issues
+
+**Problem**: `npm: command not found`
+
+**Solution**: Install Node.js from https://nodejs.org/
+
+---
+
+**Problem**: Port 3000 already in use
+
+**Solution**: Vite will automatically try next available port (5173, 5174, etc.)
+
+Or manually specify:
 ```bash
-# Vite will automatically try port 5174, 5175, etc.
-# Or you can specify a different port:
-npm run dev -- --port 3000
+npm run dev -- --port 5000
 ```
 
-### API Connection Error
-**Problem**: Frontend shows "Failed to get prediction"
+---
 
-**Check:**
-1. Backend is running on http://localhost:8000
+**Problem**: API connection error / CORS error
+
+**Solution**:
+1. Verify backend is running:
    ```bash
    curl http://localhost:8000/api/health
    ```
 
-2. Frontend `.env` file (if exists) has correct API URL:
+2. Check `.env` file in `frontend/`:
    ```bash
-   # frontend/.env.local
-   VITE_API_URL=http://localhost:8000
+   cat frontend/.env
+   # Should show: VITE_API_URL=http://localhost:8000
    ```
 
-3. CORS is enabled (already set in app.py):
-   ```python
-   CORS(app)  # Line 17 in src/api/app.py
-   ```
+3. Restart both frontend and backend
 
 ---
 
-## Architecture Overview
+## 📊 Architecture Overview
 
 ```
-┌─────────────────┐         HTTP POST          ┌─────────────────┐
-│                 │  /api/predict (JSON data)  │                 │
-│  React Frontend │ ───────────────────────────▶│   Flask API     │
-│  (Port 5173)    │                             │  (Port 8000)    │
-│                 │◀─────────────────────────── │                 │
-└─────────────────┘   JSON response with        └────────┬────────┘
-                      prediction & UI config             │
-                                                          │
-                                                          ▼
-                                              ┌──────────────────────┐
-                                              │  ML Models (Pickle)  │
-                                              │  - Hierarchical      │
-                                              │  - Scaler            │
-                                              │  - Label Encoders    │
-                                              └──────────────────────┘
+┌─────────────────────┐         HTTP POST           ┌────────────────────┐
+│   React Frontend    │    /api/predict (JSON)      │    Flask Backend   │
+│   (Port 3000)       │ ─────────────────────────>  │    (Port 8000)     │
+│   - TypeScript      │                              │    - Flask 3.1.0   │
+│   - TailwindCSS     │ <─────────────────────────  │    - CORS enabled  │
+│   - React Hook Form │   JSON response with         └─────────┬──────────┘
+└─────────────────────┘   prediction & UI config               │
+                                                                v
+                                                    ┌──────────────────────┐
+                                                    │   ML Pipeline        │
+                                                    │   - XGBoost Ordinal  │
+                                                    │   - KNN Imputer      │
+                                                    │   - StandardScaler   │
+                                                    │   - Label Encoders   │
+                                                    └──────────────────────┘
 ```
 
-**Data Flow:**
-1. User fills form in React app
-2. Frontend transforms form data to API format
-3. POST request to `/api/predict` with patient data
-4. Backend preprocesses data (imputation, encoding, scaling)
-5. ML model predicts severity level (0-4)
-6. Backend enriches response with UI configuration
-7. Frontend displays results with colors, charts, recommendations
+**Data Flow**:
+1. User fills form (13 clinical parameters)
+2. Frontend validates input (React Hook Form)
+3. POST request to `/api/predict`
+4. Backend applies preprocessing pipeline
+5. XGBoost Ordinal model predicts severity (0-4)
+6. Backend generates UI-optimized response
+7. Frontend displays color-coded results with recommendations
 
 ---
 
-## What's Next?
+## 📈 Model Performance
 
-### For Course Demo
-- ✅ You're ready! The app works end-to-end
-- 📹 Record a screen demo showing the workflow
-- 📊 Take screenshots for your report
-- 📝 Update your project report with actual results
+The application uses the **XGBoost Ordinal Classifier**:
 
-### For Better ML Performance
-See [IMPROVEMENTS.md](IMPROVEMENTS.md) for:
-- Ordinal classification to improve multi-class F1
-- SHAP explanations for predictions
-- Cost-sensitive learning
-- Confusion matrix analysis
+| Metric | Value | Status |
+|--------|-------|--------|
+| **Test F1-Score** | 0.5863 | ✅ Best multi-class |
+| **Test Accuracy** | 58.15% | Competitive |
+| **Mean Absolute Error** | 0.5924 | Low for ordinal |
+| **Severe Errors (off by 2+)** | 14.1% | Clinically safe |
 
-### For Production Deployment
-- Implement full backend with database (PostgreSQL)
-- Add user authentication (JWT)
-- Add chat AI integration
-- Deploy to cloud (Vercel + Railway)
-- See [IMPROVEMENTS.md](IMPROVEMENTS.md) Section 11
+**Binary classification** (disease detection): **85.1% F1** (13% above 75% target)
 
 ---
 
-## Demo Script
+## 🎤 Demo Script (5-Minute Presentation)
 
-**For 5-minute presentation:**
+### 1. Introduction (30 seconds)
+*"Heart disease causes 32% of global deaths. We built an AI-powered screening tool that predicts severity levels 0-4, helping doctors prioritize treatment."*
 
-1. **Introduction (30 seconds)**
-   - "Heart disease is the #1 cause of death globally"
-   - "Our ML system predicts severity on a 0-4 scale"
+### 2. Show Assessment Form (2 minutes)
+- Walk through 4 sections (Demographics, Symptoms, Vitals, Diagnostics)
+- Explain clinical parameters (chest pain types, ST depression, etc.)
+- Use high-risk patient test data
 
-2. **Show the Assessment (2 minutes)**
-   - Walk through form sections
-   - Explain each clinical parameter
-   - Use sample high-risk patient data
+### 3. Show Results (1.5 minutes)
+- Highlight color-coded severity (Red = Severe)
+- Explain confidence score (78%)
+- Show probability distribution chart
+- Read personalized action items
 
-3. **Show Results (1.5 minutes)**
-   - Highlight risk level with color coding
-   - Explain confidence score
-   - Show probability distribution
-   - Read action items
+### 4. Explain ML Pipeline (1 minute)
+*"We tested 5 algorithms. Binary classification achieved 85% F1-score (13% above target). Multi-class reached 59% using ordinal classification with sample weighting. We handled 15:1 class imbalance with BorderlineSMOTE."*
 
-4. **Explain ML Pipeline (1 minute)**
-   - "We tested 5 algorithms: RF, XGBoost, SVM, LR, GB"
-   - "Binary classification: 85% F1-score"
-   - "Multi-class: 58% F1-score"
-   - "Used SMOTE for class imbalance"
-   - "Hierarchical approach: 2-stage prediction"
-
-5. **Q&A / Close**
+### 5. Q&A
 
 ---
 
-## File Structure (Simplified Version)
+## 📂 File Structure (Key Files)
 
 ```
 cmpe-257-ML-heart-disease-risk-assessment/
+│
 ├── frontend/
 │   ├── src/
 │   │   ├── pages/
-│   │   │   ├── Home.tsx                 # Landing page
-│   │   │   └── SimpleAssessment.tsx     # ⭐ Main assessment form
-│   │   ├── App.tsx                      # Router setup
-│   │   └── index.css                    # Tailwind styles
-│   ├── package.json
-│   └── vite.config.ts
+│   │   │   ├── Home.tsx                  # Landing page
+│   │   │   └── SimpleAssessment.tsx      # ⭐ Main form + results
+│   │   ├── services/
+│   │   │   └── api.ts                    # API client (Axios)
+│   │   └── App.tsx                       # Router setup
+│   ├── package.json                      # Dependencies
+│   └── .env                              # API URL config
 │
-├── src/
-│   └── api/
-│       └── app.py                       # ⭐ Flask API with /api/predict
+├── src/api/
+│   └── app.py                            # ⭐ Flask API (3 endpoints)
 │
 ├── models/
-│   ├── hierarchical_classifier.pkl      # Trained model
-│   ├── preprocessing_artifacts.pkl      # Scaler & encoders
-│   └── model_metadata.pkl               # Model info
+│   ├── best_ordinal_model.pkl            # ⭐ XGBoost Ordinal (F1=0.5863)
+│   ├── preprocessing_artifacts.pkl       # Scaler, encoders, imputer
+│   └── model_metadata.pkl                # Performance metrics
 │
 ├── notebooks/
-│   ├── data_preprocessing.ipynb         # EDA & preprocessing
-│   └── model_training.ipynb             # Model training
+│   ├── data_preprocessing.ipynb          # EDA & feature engineering
+│   ├── model_training.ipynb              # Model training & evaluation
+│   └── ordinal_classification.py         # ⭐ Ordinal experiments
 │
-├── QUICKSTART.md                        # ⭐ This file
-├── IMPROVEMENTS.md                      # Detailed recommendations
-└── requirements.txt
+├── QUICKSTART.md                         # ⭐ This file
+├── README.md                             # Project overview
+├── FINAL_RESULTS.md                      # Comprehensive results
+├── TECHNICAL_DETAILS.md                  # System architecture
+└── requirements.txt                      # Python dependencies
 ```
 
 ---
 
-## Need Help?
+## 🎯 What's Next?
 
-1. **Check logs:**
-   - Backend: Terminal where `python src/api/app.py` is running
-   - Frontend: Browser console (F12 → Console tab)
+### For Course Demo ✅
+- **You're ready!** The app works end-to-end
+- Take screenshots for your report
+- Record a screen demo (use OBS or Loom)
+- Test all 3 example patients
 
-2. **Verify setup:**
-   ```bash
-   # Backend health check
-   curl http://localhost:8000/api/health
+### For Better ML Performance
+See [TECHNICAL_DETAILS.md](TECHNICAL_DETAILS.md) for:
+- SHAP explanations for interpretability
+- Confusion matrix per-class analysis
+- Cost-sensitive learning with medical costs
+- 3-class grouping strategy (0, 1-2, 3-4)
 
-   # Frontend running
-   curl http://localhost:5173
-   ```
-
-3. **Common issues:**
-   - Models not found → Check `models/` directory has .pkl files
-   - CORS error → Restart backend with `python src/api/app.py`
-   - Form validation errors → Check all required fields filled
+### For Production Deployment
+- Implement PostgreSQL database
+- Add JWT authentication
+- Deploy to cloud (Vercel + Railway)
+- Add rate limiting and API keys
+- Implement HIPAA compliance measures
 
 ---
 
-**You're all set! 🎉 The application is fully functional for your demo.**
+## 📞 Need Help?
+
+### 1. Check Logs
+- **Backend**: Terminal running `python src/api/app.py`
+- **Frontend**: Browser console (F12 → Console tab)
+
+### 2. Verify Setup
+```bash
+# Backend health check
+curl http://localhost:8000/api/health
+
+# Frontend accessible
+curl http://localhost:3000
+```
+
+### 3. Common Issues
+- **Models not found** → Check `models/` directory has 4 .pkl files
+- **CORS error** → Restart backend with `python src/api/app.py`
+- **Form validation errors** → Fill all required fields (marked with *)
+- **Prediction failed** → Check backend logs for preprocessing errors
+
+### 4. Documentation
+- **Frontend**: [frontend/README.md](frontend/README.md)
+- **Backend**: [src/api/README.md](src/api/README.md)
+- **Full details**: [README.md](README.md)
+
+---
+
+**🎉 You're all set! The application is fully functional for your demo.**
+
+**Status**: ✅ Production-ready
+**Last Updated**: November 24, 2025
+**Version**: 1.0.0

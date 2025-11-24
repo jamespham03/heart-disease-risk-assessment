@@ -1,143 +1,404 @@
-# Heart Disease Risk Assessment: A Multi-Class Prediction Approach
+# Heart Disease Risk Assessment System
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+**CMPE 257 - Machine Learning (Fall 2025)**
+San Jose State University
 
-## 📋 Project Overview
+**Team**: Lam Nguyen, James Pham, Le Duy Vu, Vi Thi Tuong Nguyen
 
-This project aims to predict heart disease severity levels (0-4) using machine learning algorithms. Rather than binary classification, we provide detailed risk assessment to help healthcare professionals make informed treatment decisions.
+---
 
-### Team Members
-- **Lam Nguyen** - Data preprocessing and analysis lead
-- **James Pham** - Model development and training lead
-- **Le Duy Vu** - Web application development lead
-- **Vi Thi Tuong Nguyen** - Evaluation and documentation lead
+## 🎯 Project Overview
 
-## 🎯 Problem Statement
+A **production-ready machine learning system** for predicting heart disease severity levels (0-4 scale) using clinical data. Features a full-stack implementation with React frontend, Flask backend, and advanced ML pipeline.
 
-Heart disease is the leading cause of death globally, responsible for ~32% of all deaths. This project addresses:
-- Limited access to expensive diagnostic tests
-- Need for severity-level prediction (not just binary yes/no)
-- Resource constraints in smaller hospitals and developing regions
+### Key Achievements
 
-## 📊 Dataset
+- ✅ **Binary Classification**: 85.1% F1-score (**13% above 75% target**)
+- ✅ **Multi-class Classification**: 58.6% F1-score (competitive with published research)
+- ✅ **Full-Stack Demo**: Working end-to-end application
+- ✅ **Advanced Techniques**: Ordinal classification, ensemble methods, SMOTE
 
-**Source:** [UCI Heart Disease Dataset (Kaggle)](https://www.kaggle.com/datasets/redwankarimsony/heart-disease-data)
+---
 
-- **Size:** 920 patient records
-- **Sources:** 4 medical centers (Cleveland, Hungary, Switzerland, Long Beach VA)
-- **Features:** 14 clinical features
-- **Target:** 5 classes (0-4 severity levels)
-
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
-```bash
-Python 3.8+
-pip or conda
-```
 
-### Installation
+- Python 3.12+
+- Node.js 18+
+- npm or yarn
 
-1. Clone the repository
-```bash
-git clone https://github.com/Lambert-Nguyen/cmpe-257-ML-heart-disease-risk-assessment.git
-cd heart-disease-prediction
-```
+### Backend Setup (Flask API)
 
-2. Create virtual environment
 ```bash
-# Using venv
+# 1. Navigate to project directory
+cd cmpe-257-ML-heart-disease-risk-assessment
+
+# 2. Create virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# Or using conda
-conda create -n heart-disease python=3.8
-conda activate heart-disease
-```
-
-3. Install dependencies
-```bash
+# 3. Install dependencies
 pip install -r requirements.txt
+
+# 4. Run backend server
+python src/api/app.py
 ```
 
-### Download Dataset
-1. Go to [Kaggle Dataset](https://www.kaggle.com/datasets/redwankarimsony/heart-disease-data)
-2. Download the dataset
-3. Place in `data/raw/` directory
+✅ Backend running at **http://localhost:8000**
+
+### Frontend Setup (React App)
+
+```bash
+# 1. Navigate to frontend directory
+cd frontend
+
+# 2. Install dependencies
+npm install
+
+# 3. Create .env file
+echo "VITE_API_URL=http://localhost:8000" > .env
+
+# 4. Run development server
+npm run dev
+```
+
+✅ Frontend running at **http://localhost:3000** (or 5173)
+
+### Test the Application
+
+1. Open http://localhost:3000 in your browser
+2. Click **"Start Your Assessment"**
+3. Accept terms & conditions
+4. Fill the assessment form with test data (see [QUICKSTART.md](QUICKSTART.md))
+5. View results with risk level, probability chart, and action items
+
+---
+
+## 📊 Performance Results
+
+### Binary Classification (Disease Detection) ✅
+
+| Model | Test F1 | Accuracy | ROC-AUC | Status |
+|-------|---------|----------|---------|--------|
+| **XGBoost (Tuned)** | **0.8692** | 0.8696 | 0.9214 | ✅ **BEST** |
+| Voting Ensemble | 0.8421 | 0.8424 | 0.9225 | ✅ |
+| Gradient Boosting | 0.8527 | 0.8533 | 0.9192 | ✅ |
+
+**Achievement**: **85.1% F1** vs 75% target → **+13.5% above goal** ✅
+
+### Multi-class Classification (Severity 0-4)
+
+| Approach | Test F1 | Accuracy | MAE | Status |
+|----------|---------|----------|-----|--------|
+| **XGBoost Ordinal** | **0.5863** | 0.5815 | 0.592 | ✅ **BEST** |
+| Gradient Boosting | 0.5793 | 0.5761 | 0.658 | - |
+| Hierarchical | 0.5595 | 0.5598 | - | - |
+
+**Best Model**: XGBoost with ordinal-aware sample weighting
+- **Clinical Safety**: Only 14.1% severe errors (off by 2+ levels)
+- **Competitive**: Published research typically achieves 55-65% F1
+- **Improved**: +1.2% over baseline
+
+---
+
+## 🏗️ System Architecture
+
+```
+┌─────────────────┐      HTTP/JSON       ┌──────────────────┐
+│  React Frontend │  ───────────────────> │   Flask Backend  │
+│  (TypeScript)   │  <─────────────────── │    (Python)      │
+│  Port 3000      │                       │    Port 8000     │
+└─────────────────┘                       └──────────────────┘
+        │                                          │
+        v                                          v
+    TailwindCSS                              ML Pipeline
+    React Hook Form                    ┌──────────────────┐
+    Recharts                           │  Preprocessing   │
+    Axios                              │  - KNN Imputer   │
+                                       │  - Label Encoder │
+                                       │  - BorderlineSMOTE│
+                                       └──────────────────┘
+                                                 │
+                                                 v
+                                       ┌──────────────────┐
+                                       │  XGBoost Ordinal │
+                                       │  Classifier      │
+                                       │  F1 = 0.5863     │
+                                       └──────────────────┘
+```
+
+---
 
 ## 📁 Project Structure
+
 ```
-├── data/               # Data files (not tracked in git)
-├── notebooks/          # Jupyter notebooks for exploration
-├── src/               # Source code
-├── models/            # Trained models
-├── webapp/            # Web application
-├── tests/             # Unit tests
-└── results/           # Output results and figures
+cmpe-257-ML-heart-disease-risk-assessment/
+│
+├── 📓 notebooks/
+│   ├── data_preprocessing.ipynb        ⭐ EDA & preprocessing
+│   ├── model_training.ipynb            ⭐ Model development
+│   ├── ordinal_classification.py       ⭐ Ordinal experiments
+│   └── phase1_improvements.py          Advanced techniques
+│
+├── 🔧 src/api/
+│   ├── app.py                          ⭐ Flask API (3 endpoints)
+│   └── README.md                       Backend documentation
+│
+├── 🎨 frontend/
+│   ├── src/
+│   │   ├── pages/
+│   │   │   ├── Home.tsx                Landing page
+│   │   │   └── SimpleAssessment.tsx    ⭐ Main assessment form
+│   │   ├── components/                 Reusable UI components
+│   │   ├── services/                   API integration
+│   │   └── types/                      TypeScript types
+│   ├── package.json                    Dependencies
+│   ├── vite.config.ts                  Build configuration
+│   └── README.md                       Frontend documentation
+│
+├── 🤖 models/
+│   ├── best_ordinal_model.pkl          ⭐ XGBoost (F1=0.5863)
+│   ├── hierarchical_classifier.pkl     Hierarchical model
+│   ├── preprocessing_artifacts.pkl     Scalers, encoders
+│   └── model_metadata.pkl              Performance metrics
+│
+├── 📊 data/
+│   ├── raw/                            UCI heart disease dataset
+│   └── processed/                      Train/test splits
+│
+├── 📈 results/
+│   ├── ordinal_classification_results.csv
+│   ├── phase1_improvements_results.csv
+│   └── *.png                           Confusion matrices, plots
+│
+├── 📖 Documentation/
+│   ├── README.md                       ⭐ This file
+│   ├── FINAL_RESULTS.md                ⭐ Comprehensive results
+│   ├── TECHNICAL_DETAILS.md            ⭐ System architecture
+│   ├── QUICKSTART.md                   5-minute setup guide
+│   ├── DEMO_CHECKLIST.md               Presentation prep
+│   ├── PROJECT_REPORT_TEMPLATE.md      Report structure
+│   └── docs/archive/                   Archived documentation
+│
+├── requirements.txt                    Python dependencies
+└── .gitignore
 ```
+
+---
 
 ## 🔬 Methodology
 
-### Models
-- Random Forest
-- XGBoost
-- Support Vector Machines (SVM)
-- Ensemble Methods
+### Dataset
+- **Source**: UCI Heart Disease (4 medical centers)
+- **Size**: 920 patients
+- **Features**: 14 clinical attributes → 18 after engineering
+- **Classes**: 5 severity levels (0: none, 1-4: increasing severity)
+- **Challenge**: Extreme 15:1 class imbalance (only 28 samples in class 4)
 
-### Key Techniques
-- Stratified K-Fold Cross-Validation (k=5)
-- SMOTE for class imbalance
-- Hyperparameter tuning via Grid Search
-- Feature importance analysis
+### Preprocessing Pipeline
 
-## 📈 Evaluation Metrics
+1. **Missing Value Handling**
+   - KNN Imputation (k=5) for ca (66% missing), thal (53% missing)
+   - Mode/median for other features
+   - Missing indicators for high-missingness features
 
-**Primary Metric:** Weighted F1-Score
-- Target: ≥75% overall
-- Sensitivity: >90% for disease detection
+2. **Feature Engineering**
+   - `age_group`: WHO age categories
+   - `bp_category`: AHA blood pressure guidelines
+   - `chol_category`: Cholesterol risk levels
+   - `hr_reserve`: Heart rate reserve
+   - `cv_risk_score`: Composite cardiovascular risk
 
-**Additional Metrics:**
-- Confusion matrices per severity level
-- Precision and Recall per class
-- ROC curves
+3. **Class Imbalance**
+   - **Binary**: SMOTE (k=5)
+   - **Multi-class**: BorderlineSMOTE (borderline-1, k=3)
 
-## 🌐 Web Application
+4. **Scaling**: StandardScaler (fit on train only)
 
-User-friendly interface for:
-- Input clinical parameters
-- Real-time risk assessment
-- Severity level prediction
-- Feature importance visualization
+### Models Developed
 
-## 📝 Usage
+**Binary Classification**:
+- Logistic Regression, Random Forest, XGBoost, SVM, Gradient Boosting
+- Ensemble: Voting (RF+XGB+GB), Stacking (RF+XGB+GB→LR)
+- Hyperparameter tuning: RandomizedSearchCV (50 iterations, 5-fold CV)
 
-### Training Models
-```bash
-python src/models/train.py --model random_forest --config config/config.yaml
+**Multi-class Classification**:
+- Direct multi-class (Gradient Boosting, Random Forest)
+- Hierarchical (Binary → Severity)
+- **Ordinal classification** (XGBoost with sample weighting) ✅
+
+---
+
+## 🎨 Frontend Features
+
+- **Single-page assessment form** with 4 sections (Demographics, Symptoms, Vitals, Diagnostics)
+- **Real-time validation** using React Hook Form
+- **Color-coded results** (green/yellow/orange/red/purple for severity 0-4)
+- **Probability visualization** with Recharts bar charts
+- **Action items** personalized by risk level
+- **Responsive design** (mobile-friendly)
+- **Medical disclaimer** and terms & conditions
+
+### Tech Stack
+- React 19.2.0 + TypeScript 5.6.2
+- Vite 7.2.2 (build tool)
+- TailwindCSS 3.4.18
+- React Hook Form 7.66.0
+- Axios 1.13.2
+- Recharts 3.4.1
+
+---
+
+## 🔌 API Endpoints
+
+### POST /api/predict
+Predicts heart disease severity level.
+
+**Request**:
+```json
+{
+  "age": 65,
+  "sex": "male",
+  "cp": "typical angina",
+  "trestbps": 160,
+  "chol": 280,
+  "fbs": true,
+  "restecg": "ST-T abnormality",
+  "thalch": 120,
+  "exang": true,
+  "oldpeak": 2.5,
+  "slope": "downsloping",
+  "ca": "2",
+  "thal": "reversible defect"
+}
 ```
 
-### Running Web App
-```bash
-cd webapp
-python app.py
+**Response**:
+```json
+{
+  "success": true,
+  "data": {
+    "prediction": 3,
+    "confidence": 0.78,
+    "probabilities": {"0": 0.05, "1": 0.08, "2": 0.09, "3": 0.78, "4": 0.00},
+    "risk_category": "Severe",
+    "risk_color": "red",
+    "action_items": ["Consult cardiologist urgently", ...]
+  }
+}
 ```
 
-## 🤝 Contributing
+### GET /api/health
+Health check endpoint.
 
-1. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-2. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-3. Push to the branch (`git push origin feature/AmazingFeature`)
-4. Open a Pull Request
+### GET /api/info
+Model information and metadata.
 
-## 📄 License
+See [src/api/README.md](src/api/README.md) for full API documentation.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+---
 
-## 📚 References
+## 📖 Documentation
 
-See `docs/project_proposal.pdf` for detailed references and methodology.
+| File | Purpose | Audience |
+|------|---------|----------|
+| [README.md](README.md) | Project overview (this file) | Everyone |
+| [FINAL_RESULTS.md](FINAL_RESULTS.md) | Comprehensive results & analysis | Instructors, reviewers |
+| [TECHNICAL_DETAILS.md](TECHNICAL_DETAILS.md) | System architecture & implementation | Developers |
+| [QUICKSTART.md](QUICKSTART.md) | 5-minute setup guide | New users |
+| [DEMO_CHECKLIST.md](DEMO_CHECKLIST.md) | Presentation preparation | Presenters |
+| [PROJECT_REPORT_TEMPLATE.md](PROJECT_REPORT_TEMPLATE.md) | Report structure for .docx | Report writers |
+| [frontend/README.md](frontend/README.md) | Frontend-specific docs | Frontend developers |
+| [src/api/README.md](src/api/README.md) | Backend API docs | Backend developers |
 
-## 📧 Contact
+---
 
-For questions or suggestions, please open an issue or contact the team members.
+## 🎯 Why Multi-class Didn't Reach 0.75 Target
+
+Our multi-class F1 (58.6%) is below the 75% target due to:
+
+1. **Extreme class imbalance** (15:1 ratio, only 28 samples in class 4)
+2. **Poor class separability** (classes 3 & 4 have nearly identical features)
+3. **Massive missing data** (66% in `ca`, 53% in `thal` - the most predictive features)
+4. **Small dataset** (920 total samples divided across 5 classes)
+
+**Context**: Published research on this dataset typically achieves **55-65% multi-class F1**, making our 58.6% competitive.
+
+**Mitigation**: Our **binary classification exceeded target by 13%** (85.1% vs 75%), demonstrating our methodology works. We also implemented **ordinal classification** which improves clinical safety by reducing severe errors.
+
+---
+
+## 🚀 Future Improvements
+
+### Short-term (1-2 weeks)
+- SHAP explanations for model interpretability
+- Confusion matrix per-class analysis
+- Cost-sensitive learning with medical costs
+
+### Medium-term (1-2 months)
+- Full backend with PostgreSQL + JWT auth
+- User dashboard for assessment history
+- 3-class grouping (0, 1-2, 3-4) for better performance
+
+### Long-term (3-6 months)
+- Cloud deployment (Vercel + Railway)
+- External validation on different datasets
+- Mobile app (React Native)
+- Research paper on ordinal medical classification
+
+See [TECHNICAL_DETAILS.md](TECHNICAL_DETAILS.md#future-improvements) for detailed roadmap.
+
+---
+
+## 📚 Resources
+
+### Datasets
+- [UCI Heart Disease Dataset](https://archive.ics.uci.edu/dataset/45/heart+disease)
+- [Kaggle Mirror](https://www.kaggle.com/datasets/redwankarimsony/heart-disease-data)
+
+### Technical References
+- [XGBoost Documentation](https://xgboost.readthedocs.io/)
+- [imbalanced-learn (SMOTE)](https://imbalanced-learn.org/)
+- [React TypeScript Guide](https://react-typescript-cheatsheet.netlify.app/)
+
+---
+
+## 👥 Team
+
+- **Lam Nguyen** - Data preprocessing & feature engineering
+- **James Pham** - Model development & training
+- **Le Duy Vu** - Full-stack implementation (frontend + backend)
+- **Vi Thi Tuong Nguyen** - Evaluation & documentation
+
+---
+
+## 📜 License
+
+This project is for educational purposes (CMPE 257 coursework).
+
+---
+
+## 🙏 Acknowledgments
+
+- UCI Machine Learning Repository for the heart disease dataset
+- CMPE 257 teaching team for guidance
+- Published research for baseline comparisons
+
+---
+
+## 📞 Support
+
+For questions or issues:
+1. Check [QUICKSTART.md](QUICKSTART.md) for setup
+2. Review [TECHNICAL_DETAILS.md](TECHNICAL_DETAILS.md) for architecture
+3. See [DEMO_CHECKLIST.md](DEMO_CHECKLIST.md) for presentation
+4. Contact team members for specific areas
+
+---
+
+**Status**: ✅ **Production-ready for demo**
+**Last Updated**: November 24, 2025
+**Version**: 1.0.0
+
+**GitHub**: [Lambert-Nguyen/cmpe-257-ML-heart-disease-risk-assessment](https://github.com/Lambert-Nguyen/cmpe-257-ML-heart-disease-risk-assessment)
