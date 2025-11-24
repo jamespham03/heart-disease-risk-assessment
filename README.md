@@ -9,7 +9,7 @@ San Jose State University
 
 ## 🎯 Project Overview
 
-A **production-ready machine learning system** for predicting heart disease severity levels (0-4 scale) using clinical data. Features a full-stack implementation with React frontend, Flask backend, and advanced ML pipeline.
+A **machine learning system** for predicting heart disease severity levels (0-4 scale) using clinical data. Features a full-stack implementation with React frontend, Flask backend, and advanced ML pipeline.
 
 ### Key Achievements
 
