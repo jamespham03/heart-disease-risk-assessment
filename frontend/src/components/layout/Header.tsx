@@ -31,9 +31,10 @@ export default function Header() {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-3">
-              <Heart className="w-10 h-10 text-blue-600" />
+              {/* <Heart className="w-10 h-10 text-blue-600" /> */}
+              <img src="/heart.png" alt="HeartCare AI" className="w-11 h-11" />
               <div className="flex flex-col">
-                <span className="text-2xl font-bold text-gray-900">HeartCare AI</span>
+                <span className="text-3xl font-bold text-gray-900">Healthy Heart</span>
                 <span className="text-xs text-gray-500 uppercase tracking-wide">Heart Disease Risk Assessment</span>
               </div>
             </Link>

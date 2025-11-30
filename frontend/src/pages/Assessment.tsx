@@ -87,7 +87,7 @@ export default function Assessment() {
         <div className="bg-white rounded-xl shadow-md p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <Heart className="w-8 h-8 text-blue-600" />
+              {/* <Heart className="w-8 h-8 text-blue-600" /> */}
               <h1 className="text-2xl font-bold">Heart Health Assessment</h1>
             </div>
             <span className="text-sm text-gray-600">

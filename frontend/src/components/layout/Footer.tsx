@@ -9,8 +9,9 @@ export default function Footer() {
           {/* About */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <Heart className="w-6 h-6" />
-              <span className="text-lg font-bold">HeartCare AI</span>
+              {/* <Heart className="w-6 h-6" /> */}
+              <img src="/heart.png" alt="HeartCare AI" className="w-8 h-8" />
+              <span className="text-lg font-bold">Healthy Heart</span>
             </div>
             <p className="text-gray-400 text-sm">
               AI-powered heart disease risk assessment to help you take control of your cardiovascular health.
@@ -48,7 +49,7 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold mb-4">Contact</h3>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li>Email: support@heartcareai.com</li>
+              <li>Email: support@healthyheart.com</li>
               <li>Emergency: Call 911</li>
               <li>For medical advice: Consult your doctor</li>
             </ul>
@@ -57,7 +58,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
           <p>
-            © {new Date().getFullYear()} HeartCare AI. All rights reserved.
+            © {new Date().getFullYear()} Healthy Heart. All rights reserved.
           </p>
           <p className="mt-2">
             <strong>Disclaimer:</strong> This tool is for informational purposes only and is not a substitute for professional medical advice.

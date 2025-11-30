@@ -108,9 +108,9 @@ export default function SimpleAssessment() {
         {/* Header */}
         <div className="bg-white rounded-xl shadow-md p-6 mb-6">
           <div className="flex items-center gap-3 mb-4">
-            <Heart className="w-10 h-10 text-blue-600" />
+            {/* <Heart className="w-10 h-10 text-blue-600" /> */}
             <div>
-              <h1 className="text-3xl font-bold">Heart Disease Risk Assessment</h1>
+              <h1 className="text-2xl font-bold">Heart Disease Risk Assessment</h1>
               <p className="text-gray-600">Complete the form below to get your risk assessment</p>
             </div>
           </div>
@@ -127,7 +127,7 @@ export default function SimpleAssessment() {
         <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-xl shadow-md p-8 mb-6">
           {/* Demographics Section */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+            <h2 className="text-1.5xl font-bold mb-4 flex items-center gap-2">
               <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">1</span>
               Personal Information
             </h2>
@@ -163,7 +163,7 @@ export default function SimpleAssessment() {
 
           {/* Symptoms Section */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+            <h2 className="text-1.5xl font-bold mb-4 flex items-center gap-2">
               <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">2</span>
               Symptoms
             </h2>
@@ -203,7 +203,7 @@ export default function SimpleAssessment() {
 
           {/* Vitals Section */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+            <h2 className="text-1.5xl font-bold mb-4 flex items-center gap-2">
               <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">3</span>
               Vital Signs
             </h2>
@@ -267,7 +267,7 @@ export default function SimpleAssessment() {
 
           {/* Diagnostic Tests Section */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+            <h2 className="text-1.5xl font-bold mb-4 flex items-center gap-2">
               <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">4</span>
               Diagnostic Test Results
             </h2>
