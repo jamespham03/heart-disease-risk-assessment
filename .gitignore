@@ -229,3 +229,8 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+frontendRedesign/node_modules/
+frontendRedesign/.local/
+frontendRedesign/.replit
+frontendRedesign/attached_assets/
+frontendRedesign/.vite/

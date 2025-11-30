@@ -1,5 +1,6 @@
 interface ImportMetaEnv {
     readonly VITE_API_URL: string
+    readonly VITE_USE_MOCK: string
     // Add more environment variables as needed
   }
   
