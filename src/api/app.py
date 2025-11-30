@@ -186,8 +186,9 @@ def validate_input(data: Dict[str, Any]) -> Tuple[bool, str]:
                 return False, f"Field '{field}' must be a valid number"
     
     # Validate categorical fields (only if field is provided)
+    # Case-insensitive validation for string fields
     categorical_validations = {
-        'sex': ['Male', 'Female'],
+        'sex': ['male', 'female'],
         'cp': ['typical angina', 'atypical angina', 'non-anginal', 'asymptomatic'],
         'fbs': [True, False, 'true', 'false', 1, 0],
         'restecg': ['normal', 'st-t abnormality', 'lv hypertrophy'],
@@ -198,8 +199,20 @@ def validate_input(data: Dict[str, Any]) -> Tuple[bool, str]:
 
     for field, valid_values in categorical_validations.items():
         # Only validate if field is present in the data
-        if field in data and data[field] not in valid_values:
-            return False, f"Invalid value for '{field}'. Valid values: {', '.join(map(str, valid_values))}"
+        if field in data:
+            value = data[field]
+
+            # For string values, normalize to lowercase for case-insensitive comparison
+            if isinstance(value, str):
+                normalized_value = value.lower()
+                # Check if normalized value matches any valid value (also normalized)
+                valid_values_normalized = [v.lower() if isinstance(v, str) else v for v in valid_values]
+                if normalized_value not in valid_values_normalized:
+                    return False, f"Invalid value for '{field}'. Valid values: {', '.join(map(str, valid_values))}"
+            else:
+                # For non-string values (boolean, int), use exact match
+                if value not in valid_values:
+                    return False, f"Invalid value for '{field}'. Valid values: {', '.join(map(str, valid_values))}"
 
     return True, ""
 

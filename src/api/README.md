@@ -24,7 +24,7 @@ Predicts heart disease severity based on patient clinical data.
 ```json
 {
   "age": 63,
-  "sex": "Male",
+  "sex": "male",
   "cp": "typical angina",
   "trestbps": 145.0,
   "chol": 233.0,
@@ -43,7 +43,7 @@ Predicts heart disease severity based on patient clinical data.
 ```json
 {
   "age": 45,
-  "sex": "Female",
+  "sex": "female",
   "cp": "asymptomatic",
   "exang": false
 }
@@ -94,7 +94,7 @@ These fields must always be provided:
 | Field | Description | Type | Valid Values |
 |-------|-------------|------|--------------|
 | `age` | Patient age | Integer | 18-120 years |
-| `sex` | Patient sex | String | `"Male"`, `"Female"` |
+| `sex` | Patient sex | String | `"male"`, `"female"` |
 | `cp` | Chest pain type | String | `"typical angina"`, `"atypical angina"`, `"non-anginal"`, `"asymptomatic"` |
 | `exang` | Exercise induced angina | Boolean | `true`, `false` |
 
@@ -208,7 +208,7 @@ import requests
 url = "http://localhost:8000/api/predict"
 data = {
     "age": 63,
-    "sex": "Male",
+    "sex": "male",
     "cp": "typical angina",
     "trestbps": 145.0,
     "chol": 233.0,
@@ -246,7 +246,7 @@ else:
 const url = "http://localhost:8000/api/predict";
 const data = {
   age: 63,
-  sex: "Male",
+  sex: "male",
   cp: "typical angina",
   trestbps: 145.0,
   chol: 233.0,
@@ -332,7 +332,7 @@ curl -X POST http://localhost:8000/api/predict \
   -H "Content-Type: application/json" \
   -d '{
     "age": 35,
-    "sex": "Female",
+    "sex": "female",
     "cp": "asymptomatic",
     "trestbps": 110.0,
     "chol": 180.0,
@@ -358,7 +358,7 @@ curl -X POST http://localhost:8000/api/predict \
   -H "Content-Type: application/json" \
   -d '{
     "age": 52,
-    "sex": "Male",
+    "sex": "male",
     "cp": "atypical angina",
     "trestbps": 140.0,
     "chol": 220.0,
@@ -384,7 +384,7 @@ curl -X POST http://localhost:8000/api/predict \
   -H "Content-Type: application/json" \
   -d '{
     "age": 70,
-    "sex": "Male",
+    "sex": "male",
     "cp": "typical angina",
     "trestbps": 160.0,
     "chol": 280.0,
@@ -410,7 +410,7 @@ curl -X POST http://localhost:8000/api/predict \
   -H "Content-Type: application/json" \
   -d '{
     "age": 45,
-    "sex": "Female",
+    "sex": "female",
     "cp": "non-anginal",
     "trestbps": 130.0,
     "chol": 200.0,
@@ -436,7 +436,7 @@ curl -X POST http://localhost:8000/api/predict \
   -H "Content-Type: application/json" \
   -d '{
     "age": 58,
-    "sex": "Male",
+    "sex": "male",
     "cp": "asymptomatic",
     "trestbps": 150.0,
     "chol": 250.0,
@@ -462,7 +462,7 @@ curl -X POST http://localhost:8000/api/predict \
   -H "Content-Type: application/json" \
   -d '{
     "age": 42,
-    "sex": "Female",
+    "sex": "female",
     "cp": "non-anginal",
     "exang": false
   }'

@@ -60,6 +60,32 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Features Section */}
+      {/* <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">
+            How It Works
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <FeatureCard
+              icon={<Activity className="w-10 h-10 text-blue-600" />}
+              title="Answer Questions"
+              description="Provide basic health information including age, blood pressure, cholesterol levels, and symptoms."
+            />
+            <FeatureCard
+              icon={<Shield className="w-10 h-10 text-blue-600" />}
+              title="AI Analysis"
+              description="Our machine learning models analyze your data to predict heart disease risk on a scale from 0-2."
+            />
+            <FeatureCard
+              icon={<MessageCircle className="w-10 h-10 text-blue-600" />}
+              title="Get Guidance"
+              description="Receive personalized recommendations and chat with our AI assistant about your results."
+            />
+          </div>
+        </div>
+      </section> */}
+
 <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
@@ -76,7 +102,7 @@ export default function Home() {
             <FeatureCard
               icon={<img src="/analysis.jpg" alt="Questions"/>}
               title="AI Analysis"
-              description="Our machine learning models analyze your data to predict heart disease risk on a scale from 0-4."
+              description="Our machine learning models analyze your data to predict heart disease risk on a scale from 0-2."
               // linkText="Learn More"
               // linkUrl="#about"
             />
@@ -101,11 +127,11 @@ export default function Home() {
               <li className="py-8">
                 <div className="grid md:grid-cols-12 gap-6">
                   <div className="md:col-span-3">
-                    <h3 className="text-2xl font-bold text-gray-900">0 - No Disease</h3>
+                    <h3 className="text-2xl font-bold text-green-700">0 - No Disease</h3>
                   </div>
                   <div className="md:col-span-9">
                     <p className="text-gray-600 text-lg leading-relaxed">
-                      No significant heart disease detected. Less than 50% artery blockage.
+                      No significant heart disease detected. Your heart health appears normal based on the assessed factors. Continue maintaining a healthy lifestyle.
                     </p>
                   </div>
                 </div>
@@ -113,11 +139,11 @@ export default function Home() {
               <li className="py-8">
                 <div className="grid md:grid-cols-12 gap-6">
                   <div className="md:col-span-3">
-                    <h3 className="text-2xl font-bold text-gray-900">1 - Mild</h3>
+                    <h3 className="text-2xl font-bold text-orange-600">1 - Mild to Moderate</h3>
                   </div>
                   <div className="md:col-span-9">
                     <p className="text-gray-600 text-lg leading-relaxed">
-                      Mild heart disease. Lifestyle changes recommended.
+                      Mild to moderate heart disease indicators detected. Lifestyle modifications and medical consultation recommended to manage risk factors.
                     </p>
                   </div>
                 </div>
@@ -125,35 +151,11 @@ export default function Home() {
               <li className="py-8">
                 <div className="grid md:grid-cols-12 gap-6">
                   <div className="md:col-span-3">
-                    <h3 className="text-2xl font-bold text-gray-900">2 - Moderate</h3>
+                    <h3 className="text-2xl font-bold text-red-600">2 - Severe to Critical</h3>
                   </div>
                   <div className="md:col-span-9">
                     <p className="text-gray-600 text-lg leading-relaxed">
-                      Moderate heart disease. Medical consultation advised.
-                    </p>
-                  </div>
-                </div>
-              </li>
-              <li className="py-8">
-                <div className="grid md:grid-cols-12 gap-6">
-                  <div className="md:col-span-3">
-                    <h3 className="text-2xl font-bold text-gray-900">3 - Severe</h3>
-                  </div>
-                  <div className="md:col-span-9">
-                    <p className="text-gray-600 text-lg leading-relaxed">
-                      Severe heart disease. Urgent medical attention needed.
-                    </p>
-                  </div>
-                </div>
-              </li>
-              <li className="py-8">
-                <div className="grid md:grid-cols-12 gap-6">
-                  <div className="md:col-span-3">
-                    <h3 className="text-2xl font-bold text-gray-900">4 - Critical</h3>
-                  </div>
-                  <div className="md:col-span-9">
-                    <p className="text-gray-600 text-lg leading-relaxed">
-                      Critical condition. Immediate medical intervention required.
+                      Significant heart disease indicators detected. Immediate medical attention and comprehensive cardiac evaluation strongly advised.
                     </p>
                   </div>
                 </div>

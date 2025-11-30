@@ -23,8 +23,8 @@ This guide helps translate clinical features into user-friendly questions for th
 **Question**: "What is your biological sex?"
 **Input Type**: Radio buttons or dropdown
 **Options**:
-- Male
-- Female
+- male
+- female
 **Help Text**: "Select your biological sex as recorded in medical records"
 **Required**: Yes
 **Default**: None
