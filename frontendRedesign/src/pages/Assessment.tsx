@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { Heart, AlertTriangle, Info, Loader2, CheckCircle } from 'lucide-react'
+import { Heart, AlertTriangle, Info, Loader2, CheckCircle, HelpCircle } from 'lucide-react'
 import Button from '../components/common/Button'
 import Card from '../components/common/Card'
 import Input from '../components/common/Input'
@@ -25,21 +25,55 @@ interface FormData {
   thal: string
 }
 
+// Short help text displayed below fields
 const fieldDescriptions: Record<string, string> = {
-  age: 'Please enter your current age in years (18-120)',
-  sex: 'Select your biological sex as recorded in your medical records',
-  cp: 'Describe the type of chest discomfort you experience: Typical angina (pressure/squeezing during activity, relieved by rest), Atypical angina (discomfort that doesn\'t follow a clear pattern), Non-anginal pain (sharp or stabbing, not related to exertion), or Asymptomatic (no chest pain)',
-  exang: 'Does physical activity or exercise trigger chest pain or discomfort?',
-  trestbps: 'Enter the top/first number from your blood pressure reading (e.g., if your BP is 120/80, enter 120). Measured in mm Hg. Normal range is around 90-120. If you don\'t know, we\'ll use a median value.',
-  chol: 'Your total cholesterol from a recent blood test in mg/dL. A desirable level is below 200. If you don\'t know, we\'ll use a median value.',
-  fbs: 'Fasting blood sugar measured after not eating for 8+ hours. Normal is below 100 mg/dL. Select "Yes" if you have diabetes, prediabetes, or if your fasting glucose is above 120 mg/dL.',
-  restecg: 'ECG results when at rest. Select the category that best describes your resting electrocardiogram findings.',
-  thalch: 'The maximum heart rate you achieved during an exercise stress test. Measured in beats per minute. Typical values range from 120-200 depending on age and fitness level.',
-  oldpeak: 'ST segment depression observed during exercise compared to at rest. Measured in millimeters. This is often an indicator from an exercise stress test.',
-  slope: 'The slope of the ST segment during peak exercise. Select the category: Upsloping (best), Flat, or Downsloping (concerning).',
-  ca: 'Number of major blood vessels (0-4) that showed narrowing when colored by fluoroscopy. This is from a coronary angiography procedure.',
-  thal: 'Results from a thallium stress test. Select: Normal (no defects), Fixed defect (scar tissue), or Reversible defect (indicates ischemia).',
+  age: 'Your current age (older age increases heart disease risk)',
+  sex: 'Biological sex (men and women have different risk patterns)',
+  cp: 'Different types of chest pain indicate different heart conditions',
+  exang: 'Chest pain during physical activity is a key warning sign',
+  trestbps: 'The force of blood against artery walls when your heart beats (top number only)',
+  chol: 'Fatty substance in blood that can clog arteries if too high',
+  fbs: 'High blood sugar (diabetes) damages blood vessels and increases heart risk',
+  restecg: 'Heart rhythm test that shows electrical activity and potential problems',
+  thalch: 'How fast your heart can beat during maximum physical effort',
+  oldpeak: 'Measure from stress test showing if heart muscle gets enough blood during exercise',
+  slope: 'The direction of a specific line on your stress test results (upsloping is best)',
+  ca: 'How many of your main heart arteries have blockages (from specialized X-ray)',
+  thal: 'Test showing blood flow to heart muscle (detects areas not getting enough blood)',
 }
+
+// Detailed tooltips shown on hover
+const fieldTooltips: Record<string, string> = {
+  age: 'Enter your current age. Heart disease risk increases with age, especially after 45 for men and 55 for women.',
+  sex: 'Select your biological sex as recorded in your medical records. Men and women have different heart disease risk patterns.',
+  cp: 'Chest pain type helps identify heart problems. Angina is heart-related chest pressure/tightness that typically occurs during activity. Non-anginal pain is usually sharp and not heart-related. If you have no chest pain, select "Asymptomatic".',
+  exang: 'Do you experience chest pain, pressure, or discomfort during physical activities like walking upstairs, exercising, or doing chores? This is an important indicator of heart problems.',
+  trestbps: 'Enter only the TOP number from your blood pressure reading (e.g., the "120" in 120/80). This measures the pressure when your heart beats. Normal is around 120 or below. High blood pressure (140+) damages arteries over time. Default if blank: 130 mm Hg (median value).',
+  chol: 'Cholesterol is a waxy substance in your blood. Too much can build up in arteries and restrict blood flow to your heart. Measured in mg/dL from a blood test. Desirable level: below 200. High: 240+. Default if blank: 200 mg/dL (median value).',
+  fbs: 'Measured after not eating for 8+ hours (usually morning blood test). High blood sugar damages blood vessels and nerves controlling your heart. Normal: below 100 mg/dL. Prediabetes: 100-125. Diabetes: 126+. Select "High" if you have diabetes/prediabetes or levels above 120. Default if blank: Normal (≤120 mg/dL).',
+  restecg: 'ECG/EKG is a test where stickers on your chest measure your heart\'s electrical signals. Shows if your heart rhythm is normal or has abnormalities. Takes about 5 minutes. "LV hypertrophy" means thickened heart muscle from working too hard (often from high blood pressure). Default if blank: Normal.',
+  thalch: 'From an exercise stress test where you walk/run on a treadmill while monitored. Measures the fastest your heart beat during the test. Lower max heart rates may indicate poor cardiovascular fitness or heart problems. Default if blank: Estimated as 220 minus your age (e.g., 170 bpm for a 50-year-old).',
+  oldpeak: 'This measures changes in your heart\'s electrical pattern during exercise compared to rest. From a stress test. Higher numbers mean your heart muscle may not be getting enough oxygen-rich blood during exercise (possible blockage). Measured in millimeters on the ECG printout. Default if blank: 0.0 (assumes no test done).',
+  slope: 'From a stress test ECG. Describes the angle/direction of a particular wave pattern at peak exercise. Upsloping (going up) is normal/healthy. Flat may indicate problems. Downsloping (going down) is more concerning and suggests possible heart disease. Default if blank: Upsloping (favorable).',
+  ca: 'From a cardiac catheterization/angiogram - a procedure where dye is injected and X-rays show blood flow through heart arteries. The number (0-4) indicates how many major vessels have significant narrowing. 0 = no blockages (best). Higher numbers mean more blockages (worse). This is an invasive test usually only done if heart disease is suspected. Default if blank: 0 (no blockages detected).',
+  thal: 'From a nuclear stress test or thallium scan where a small amount of radioactive material is injected to create images of blood flow to your heart muscle. Normal = good blood flow everywhere. Fixed defect = permanent damage/scar (from past heart attack). Reversible defect = area that gets poor blood flow during stress but normal at rest (suggests blockage). Default if blank: Normal (normal blood flow).',
+}
+
+// Component for field label with tooltip
+const FieldLabel = ({ label, tooltip }: { label: string; tooltip?: string }) => (
+  <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+    <span>{label}</span>
+    {tooltip && (
+      <div className="group relative inline-block">
+        <HelpCircle className="h-4 w-4 text-gray-400 hover:text-primary-600 cursor-help" />
+        <div className="invisible group-hover:visible absolute z-10 left-0 top-6 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-lg">
+          {tooltip}
+          <div className="absolute -top-1 left-4 w-2 h-2 bg-gray-900 transform rotate-45"></div>
+        </div>
+      </div>
+    )}
+  </label>
+)
 
 export default function Assessment() {
   const navigate = useNavigate()
@@ -135,13 +169,26 @@ export default function Assessment() {
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
+        <Card className="mb-6 border-l-4 border-l-blue-500 bg-blue-50">
+          <div className="flex items-start gap-4">
+            <Info className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <div className="text-sm">
+              <p className="font-semibold text-blue-900 mb-1">Quick Note</p>
+              <p className="text-blue-800">
+                Only <strong>4 fields are required</strong> (age, sex, chest pain type, exercise-induced angina).
+                All other fields are optional - if you don't know the values, leave them blank and we'll use sensible defaults.
+              </p>
+            </div>
+          </div>
+        </Card>
+
         <Card className="mb-6 border-l-4 border-l-warning">
           <div className="flex items-start gap-4">
             <AlertTriangle className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
             <div className="text-sm">
               <p className="font-medium text-gray-900 mb-1">Important Disclaimer</p>
               <p className="text-gray-600">
-                This machine learning-based assessment is for informational purposes only and does not replace professional 
+                This machine learning-based assessment is for informational purposes only and does not replace professional
                 medical advice. Please consult a healthcare provider for proper diagnosis and treatment.
               </p>
             </div>
@@ -157,11 +204,11 @@ export default function Assessment() {
             
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <label className="text-sm font-medium text-gray-700">Age *</label>
+                <FieldLabel label="Age *" tooltip={fieldTooltips.age} />
                 <Input
                   type="number"
                   placeholder="Enter your age"
-                  {...register('age', { 
+                  {...register('age', {
                     required: 'Age is required',
                     min: { value: 18, message: 'Age must be at least 18' },
                     max: { value: 120, message: 'Age must be less than 120' },
@@ -170,9 +217,9 @@ export default function Assessment() {
                   helpText={fieldDescriptions.age}
                 />
               </div>
-              
+
               <div>
-                <label className="text-sm font-medium text-gray-700">Sex *</label>
+                <FieldLabel label="Sex *" tooltip={fieldTooltips.sex} />
                 <Select
                   placeholder="Select sex"
                   {...register('sex', { required: 'Sex is required' })}
@@ -184,9 +231,9 @@ export default function Assessment() {
                   helpText={fieldDescriptions.sex}
                 />
               </div>
-              
+
               <div className="md:col-span-2">
-                <label className="text-sm font-medium text-gray-700">Chest Pain Type *</label>
+                <FieldLabel label="Chest Pain Type *" tooltip={fieldTooltips.cp} />
                 <Select
                   placeholder="Select chest pain type"
                   {...register('cp', { required: 'Chest pain type is required' })}
@@ -200,9 +247,9 @@ export default function Assessment() {
                   helpText={fieldDescriptions.cp}
                 />
               </div>
-              
+
               <div className="md:col-span-2">
-                <label className="text-sm font-medium text-gray-700">Exercise-Induced Angina *</label>
+                <FieldLabel label="Exercise-Induced Angina *" tooltip={fieldTooltips.exang} />
                 <Select
                   placeholder="Select option"
                   {...register('exang', { required: 'This field is required' })}
@@ -239,15 +286,19 @@ export default function Assessment() {
               <div className="mt-6 pt-6 border-t">
                 <div className="flex items-start gap-2 mb-6 p-4 bg-blue-50 rounded-lg">
                   <Info className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm text-blue-800">
-                    Providing additional clinical data can improve the accuracy of your assessment. 
-                    If you don't know these values, leave them blank and we'll use healthy defaults.
-                  </p>
+                  <div className="text-sm text-blue-800">
+                    <p className="font-semibold mb-1">Optional Fields - Skip if Unknown</p>
+                    <p>
+                      Providing additional clinical data can improve the accuracy of your assessment.
+                      If you don't know these values, leave them blank and sensible defaults will be used
+                      (e.g., median blood pressure of 130, cholesterol of 200, normal test results).
+                    </p>
+                  </div>
                 </div>
                 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Resting Blood Pressure</label>
+                    <FieldLabel label="Resting Blood Pressure" tooltip={fieldTooltips.trestbps} />
                     <Input
                       type="number"
                       placeholder="e.g., 120"
@@ -259,9 +310,9 @@ export default function Assessment() {
                       helpText={fieldDescriptions.trestbps}
                     />
                   </div>
-                  
+
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Cholesterol Level</label>
+                    <FieldLabel label="Cholesterol Level" tooltip={fieldTooltips.chol} />
                     <Input
                       type="number"
                       placeholder="e.g., 200"
@@ -273,9 +324,9 @@ export default function Assessment() {
                       helpText={fieldDescriptions.chol}
                     />
                   </div>
-                  
+
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Fasting Blood Sugar</label>
+                    <FieldLabel label="Fasting Blood Sugar" tooltip={fieldTooltips.fbs} />
                     <Select
                       placeholder="Select option"
                       {...register('fbs')}
@@ -286,9 +337,9 @@ export default function Assessment() {
                       helpText={fieldDescriptions.fbs}
                     />
                   </div>
-                  
+
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Resting ECG</label>
+                    <FieldLabel label="Resting ECG" tooltip={fieldTooltips.restecg} />
                     <Select
                       placeholder="Select option"
                       {...register('restecg')}
@@ -300,9 +351,9 @@ export default function Assessment() {
                       helpText={fieldDescriptions.restecg}
                     />
                   </div>
-                  
+
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Max Heart Rate</label>
+                    <FieldLabel label="Max Heart Rate" tooltip={fieldTooltips.thalch} />
                     <Input
                       type="number"
                       placeholder="e.g., 150"
@@ -314,9 +365,9 @@ export default function Assessment() {
                       helpText={fieldDescriptions.thalch}
                     />
                   </div>
-                  
+
                   <div>
-                    <label className="text-sm font-medium text-gray-700">ST Depression (Oldpeak)</label>
+                    <FieldLabel label="ST Depression (Oldpeak)" tooltip={fieldTooltips.oldpeak} />
                     <Input
                       type="number"
                       step="0.1"
@@ -329,9 +380,9 @@ export default function Assessment() {
                       helpText={fieldDescriptions.oldpeak}
                     />
                   </div>
-                  
+
                   <div>
-                    <label className="text-sm font-medium text-gray-700">ST Slope</label>
+                    <FieldLabel label="ST Slope" tooltip={fieldTooltips.slope} />
                     <Select
                       placeholder="Select option"
                       {...register('slope')}
@@ -343,9 +394,9 @@ export default function Assessment() {
                       helpText={fieldDescriptions.slope}
                     />
                   </div>
-                  
+
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Major Vessels</label>
+                    <FieldLabel label="Major Vessels" tooltip={fieldTooltips.ca} />
                     <Select
                       placeholder="Select option"
                       {...register('ca')}
@@ -359,9 +410,9 @@ export default function Assessment() {
                       helpText={fieldDescriptions.ca}
                     />
                   </div>
-                  
+
                   <div className="md:col-span-2">
-                    <label className="text-sm font-medium text-gray-700">Thalassemia</label>
+                    <FieldLabel label="Thalassemia" tooltip={fieldTooltips.thal} />
                     <Select
                       placeholder="Select option"
                       {...register('thal')}
