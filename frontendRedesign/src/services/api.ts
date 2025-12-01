@@ -5,7 +5,7 @@
  * It supports both real API calls and mock mode for development.
  */
 
-import type { PredictRequest, PredictResponse, ChatSession, ChatMessage, ChatHistory } from '../types';
+import type { PredictRequest, PredictResponse } from '../types';
 import mockApi from '../mocks/mockApi';
 
 // API Configuration
@@ -95,54 +95,11 @@ export async function predict(data: PredictRequest): Promise<PredictResponse> {
   });
 }
 
-/**
- * Create a new chat session
- * Note: Chat is mock-only for now since Flask backend doesn't have this endpoint
- */
-export async function createChatSession(assessmentId: number): Promise<ChatSession> {
-  // Chat is mock-only for now
-  return mockApi.createChatSession(assessmentId);
-}
-
-/**
- * Send a chat message
- * Note: Chat is mock-only for now since Flask backend doesn't have this endpoint
- */
-export async function sendChatMessage(
-  sessionToken: string,
-  content: string
-): Promise<ChatMessage> {
-  // Chat is mock-only for now
-  return mockApi.sendChatMessage(sessionToken, content);
-}
-
-/**
- * Get chat history
- * Note: Chat is mock-only for now since Flask backend doesn't have this endpoint
- */
-export async function getChatHistory(sessionToken: string): Promise<ChatHistory> {
-  // Chat is mock-only for now
-  return mockApi.getChatHistory(sessionToken);
-}
-
-/**
- * End a chat session
- * Note: Chat is mock-only for now since Flask backend doesn't have this endpoint
- */
-export async function endChatSession(sessionToken: string): Promise<void> {
-  // Chat is mock-only for now
-  return mockApi.endChatSession(sessionToken);
-}
-
 // Default export as API object
 const api = {
   healthCheck,
   getModelInfo,
   predict,
-  createChatSession,
-  sendChatMessage,
-  getChatHistory,
-  endChatSession,
 };
 
 export default api;

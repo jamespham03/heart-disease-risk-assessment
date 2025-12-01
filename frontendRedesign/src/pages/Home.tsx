@@ -13,7 +13,7 @@ export default function Home() {
     {
       icon: <Shield className="h-8 w-8 text-primary-600" />,
       title: 'Privacy First',
-      description: 'Your health data is encrypted and never shared. We prioritize your privacy and security.',
+      description: 'Your health data is private and never shared. We prioritize your privacy and security.',
     },
     {
       icon: <Activity className="h-8 w-8 text-primary-600" />,
@@ -41,9 +41,9 @@ export default function Home() {
   ]
 
   const stats = [
-    { value: '1M+', label: 'Assessments Completed' },
-    { value: '95%', label: 'Accuracy Rate' },
-    { value: '50+', label: 'Risk Factors Analyzed' },
+    { value: '3', label: 'Risk Categories' },
+    { value: '13', label: 'Clinical Features' },
+    { value: 'ML', label: 'Powered Analysis' },
   ]
 
   return (
@@ -56,9 +56,9 @@ export default function Home() {
             <div>
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
                 <Heart className="h-4 w-4 text-red-400 animate-pulse" />
-                <span className="text-sm font-medium">Trusted by Healthcare Professionals</span>
+                <span className="text-sm font-medium">Demo Assessment Tool</span>
               </div>
-              
+
               <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-6">
                 Know Your Heart Health in Minutes
               </h1>
@@ -133,11 +133,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Why Choose HealthyHeart?
+              Key Features
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Our comprehensive assessment tool combines medical expertise with advanced machine learning 
-              to give you actionable insights about your heart health.
+              A demonstration of how machine learning can be applied to cardiovascular risk assessment,
+              providing educational insights about heart health factors.
             </p>
           </div>
           
@@ -211,11 +211,11 @@ export default function Home() {
             <div className="text-center lg:text-left">
               <Users className="h-16 w-16 mx-auto lg:mx-0 mb-6 opacity-80" />
               <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-                Join Thousands Who've Taken Control
+                Take Control of Your Heart Health
               </h2>
               <p className="text-xl text-primary-100 mb-8">
-                Don't wait until it's too late. Understanding your heart disease risk is the first 
-                step toward a healthier life. Take the assessment today.
+                Understanding your heart disease risk is the first step toward a healthier life.
+                Try our demo assessment tool to see how machine learning can analyze cardiovascular health data.
               </p>
               <Link to="/assessment">
                 <Button 
@@ -237,17 +237,16 @@ export default function Home() {
             <div className="flex items-start gap-4">
               <AlertTriangle className="h-6 w-6 text-warning flex-shrink-0 mt-1" />
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Medical Disclaimer</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Important Notice</h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
-                  This heart disease risk assessment tool is designed for informational and educational 
-                  purposes only. It is not intended to be a substitute for professional medical advice, 
-                  diagnosis, or treatment. The results provided by this tool should not be used to make 
-                  decisions about your health without consulting a qualified healthcare provider.
+                  This is a <strong>demonstration project</strong> for educational purposes only. It is not
+                  a medical device and should not be used for actual health assessment or diagnosis.
+                  The machine learning model and results are for illustrative purposes to demonstrate the
+                  application of ML techniques to cardiovascular data.
                 </p>
                 <p className="text-gray-600 text-sm leading-relaxed mt-2">
-                  Always seek the advice of your physician or other qualified health provider with any 
-                  questions you may have regarding a medical condition. If you think you may have a 
-                  medical emergency, call your doctor or emergency services immediately.
+                  For real health concerns, always consult with qualified healthcare professionals.
+                  If you think you may have a medical emergency, call your doctor or emergency services immediately.
                 </p>
               </div>
             </div>
