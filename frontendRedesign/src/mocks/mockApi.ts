@@ -15,9 +15,6 @@ import type {
   User,
   Assessment,
   Prediction,
-  ChatSession,
-  ChatMessage,
-  ChatHistory,
   AuthTokens,
 } from '../types';
 
@@ -25,9 +22,6 @@ import {
   mockUsers,
   mockAssessments,
   mockPredictions,
-  mockChatSessions,
-  mockChatMessages,
-  mockAIResponses,
   mockRecommendations,
   mockModelInfo,
   mockHealthCheck,
@@ -82,8 +76,6 @@ const state = {
   users: [...mockUsers],
   assessments: [...mockAssessments],
   predictions: [...mockPredictions],
-  chatSessions: [...mockChatSessions],
-  chatMessages: { ...mockChatMessages } as { [key: string]: ChatMessage[] },
   currentUser: null as User | null,
   accessToken: null as string | null,
 };
@@ -233,91 +225,6 @@ function calculatePrediction(data: PredictRequest): PredictResponse {
       action_items: actionItems,
     },
   };
-}
-
-/**
- * Generate AI response for chat based on message content
- */
-function generateAIResponse(message: string, assessmentId: number): string {
-  const lowerMessage = message.toLowerCase();
-  
-  // Check for keywords and return appropriate response
-  const keywords = [
-    'cholesterol',
-    'blood pressure',
-    'exercise',
-    'symptoms',
-    'diet',
-    'medication',
-  ];
-  
-  for (const keyword of keywords) {
-    if (lowerMessage.includes(keyword)) {
-      return mockAIResponses[keyword];
-    }
-  }
-  
-  // Check for common questions
-  if (lowerMessage.includes('should i see') || lowerMessage.includes('doctor') || lowerMessage.includes('cardiologist')) {
-    return `Based on your assessment results, here's my recommendation regarding seeing a healthcare provider:
-
-${assessmentId % 2 === 0 
-  ? `With your current risk profile, I recommend scheduling a consultation with your primary care physician to discuss your results. While not urgent, it's always good to have a baseline evaluation.
-
-Your doctor may recommend:
-• Routine blood work
-• Blood pressure monitoring
-• Discussion of lifestyle modifications
-
-Would you like tips on preparing for your appointment?`
-  : `Given your assessment results, I would recommend scheduling an appointment with a cardiologist within the next 1-2 weeks. This isn't an emergency, but it's important to get a professional evaluation.
-
-Before your appointment:
-• Write down all symptoms you've experienced
-• List all current medications and supplements
-• Prepare questions you want to ask
-• Bring this assessment report
-
-Do you have any other questions about your results?`
-}`;
-  }
-  
-  if (lowerMessage.includes('thank')) {
-    return `You're welcome! I'm here to help you understand and improve your heart health. 
-
-Remember:
-• Take your results seriously, but don't panic
-• Follow up with healthcare professionals
-• Small lifestyle changes can make a big difference
-• You're taking a great step by being proactive about your health
-
-Is there anything else you'd like to know about your assessment?`;
-  }
-  
-  if (lowerMessage.includes('risk') && (lowerMessage.includes('what') || lowerMessage.includes('mean'))) {
-    return `Let me explain your risk assessment:
-
-**Understanding Risk Levels:**
-
-🟢 **No Disease (Class 0):** Low probability of significant heart disease. Continue healthy habits and routine check-ups.
-
-🟠 **Mild-Moderate (Class 1):** Some risk factors present. Lifestyle modifications and possibly medical evaluation recommended.
-
-🔴 **Severe-Critical (Class 2):** Significant risk factors detected. Prompt medical attention recommended.
-
-**Your Key Factors:**
-The model considers multiple factors including:
-• Age and sex
-• Blood pressure and cholesterol
-• Heart rate response to exercise
-• ECG findings
-• Chest pain characteristics
-
-Would you like me to explain any specific factor in more detail?`;
-  }
-  
-  // Default response
-  return mockAIResponses['default'];
 }
 
 // ==================== MOCK API CLASS ====================
@@ -654,114 +561,6 @@ class MockApiService {
     }
     
     return calculatePrediction(data);
-  }
-  
-  // ==================== CHAT ENDPOINTS ====================
-  
-  async createChatSession(assessmentId: number): Promise<ChatSession> {
-    await delay();
-    maybeThrowError();
-    
-    const session: ChatSession = {
-      id: generateId(),
-      session_token: generateToken(),
-      assessment_id: assessmentId,
-      is_active: true,
-      started_at: now(),
-      total_messages: 0,
-    };
-    
-    state.chatSessions.push(session);
-    
-    // Add initial assistant message
-    const initialMessage: ChatMessage = {
-      id: generateId(),
-      role: 'assistant',
-      content: `Hello! I'm your Heart Health Assistant. I've reviewed your assessment results and I'm here to help you understand them better.
-
-Feel free to ask me about:
-• Your risk factors and what they mean
-• Lifestyle modifications (diet, exercise, stress management)
-• When and how to follow up with healthcare providers
-• Any questions about heart health in general
-
-What would you like to know?`,
-      created_at: now(),
-      references_prediction: true,
-      references_assessment_data: false,
-    };
-    
-    state.chatMessages[session.session_token] = [initialMessage];
-    
-    return session;
-  }
-  
-  async sendChatMessage(sessionToken: string, content: string): Promise<ChatMessage> {
-    await delay(800); // Simulate AI processing
-    maybeThrowError();
-    
-    const session = state.chatSessions.find(s => s.session_token === sessionToken);
-    
-    if (!session) {
-      throw { response: { status: 404, data: { detail: 'Chat session not found' } } };
-    }
-    
-    // Add user message
-    const userMessage: ChatMessage = {
-      id: generateId(),
-      role: 'user',
-      content,
-      created_at: now(),
-      references_prediction: false,
-      references_assessment_data: false,
-    };
-    
-    if (!state.chatMessages[sessionToken]) {
-      state.chatMessages[sessionToken] = [];
-    }
-    state.chatMessages[sessionToken].push(userMessage);
-    
-    // Generate and add AI response
-    await delay(600); // Additional thinking time
-    
-    const aiResponse: ChatMessage = {
-      id: generateId(),
-      role: 'assistant',
-      content: generateAIResponse(content, session.assessment_id),
-      created_at: now(),
-      references_prediction: Math.random() > 0.5,
-      references_assessment_data: Math.random() > 0.5,
-    };
-    
-    state.chatMessages[sessionToken].push(aiResponse);
-    session.total_messages = state.chatMessages[sessionToken].length;
-    
-    return aiResponse;
-  }
-  
-  async getChatHistory(sessionToken: string): Promise<ChatHistory> {
-    await delay(300);
-    
-    const session = state.chatSessions.find(s => s.session_token === sessionToken);
-    
-    if (!session) {
-      throw { response: { status: 404, data: { detail: 'Chat session not found' } } };
-    }
-    
-    return {
-      session,
-      messages: state.chatMessages[sessionToken] || [],
-    };
-  }
-  
-  async endChatSession(sessionToken: string): Promise<void> {
-    await delay(200);
-    
-    const session = state.chatSessions.find(s => s.session_token === sessionToken);
-    
-    if (session) {
-      session.is_active = false;
-    }
   }
   
   // ==================== HEALTH CHECK & MODEL INFO ====================

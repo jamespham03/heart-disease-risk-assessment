@@ -64,29 +64,6 @@ export interface Prediction {
   recommendations?: Recommendation[];
 }
 
-export interface ChatSession {
-  id: number;
-  session_token: string;
-  assessment_id: number;
-  is_active: boolean;
-  started_at: string;
-  total_messages: number;
-}
-
-export interface ChatMessage {
-  id: number;
-  role: 'user' | 'assistant';
-  content: string;
-  created_at: string;
-  references_prediction: boolean;
-  references_assessment_data: boolean;
-}
-
-export interface ChatHistory {
-  session: ChatSession;
-  messages: ChatMessage[];
-}
-
 export interface AuthTokens {
   access_token: string;
   refresh_token: string;

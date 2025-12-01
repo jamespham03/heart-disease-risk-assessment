@@ -60,8 +60,7 @@ frontendRedesign/
 │   ├── pages/            # Page components
 │   │   ├── Home.tsx      # Landing page
 │   │   ├── Assessment.tsx # Risk assessment form
-│   │   ├── Results.tsx   # Results dashboard
-│   │   └── Chat.tsx      # AI chat interface
+│   │   └── Results.tsx   # Results dashboard
 │   ├── services/         # API service layer
 │   │   └── api.ts        # Real API calls + mock mode toggle
 │   ├── types/            # TypeScript type definitions
@@ -151,7 +150,6 @@ The frontend connects to these Flask backend endpoints:
 - **Home Page**: Landing page with information about the assessment
 - **Assessment Form**: Multi-step form with required and optional clinical fields
 - **Results Dashboard**: Visual display of prediction results with charts
-- **AI Chat**: Chat interface for asking questions about results (mock mode only)
 - **Responsive Design**: Works on desktop, tablet, and mobile
 
 ## 🛠️ Available Scripts

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { Heart, MessageSquare, RotateCcw, Download, Share2, AlertTriangle, CheckCircle, AlertCircle, Printer } from 'lucide-react'
+import { Heart, RotateCcw, Download, Share2, AlertTriangle, CheckCircle, AlertCircle, Printer } from 'lucide-react'
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
 import Button from '../components/common/Button'
 import Card from '../components/common/Card'
@@ -85,10 +85,6 @@ export default function Results() {
       navigator.clipboard.writeText(window.location.href)
       alert('Link copied to clipboard!')
     }
-  }
-
-  const handleStartChat = () => {
-    navigate('/chat')
   }
 
   return (
@@ -203,30 +199,6 @@ export default function Results() {
               </li>
             ))}
           </ul>
-        </Card>
-
-        <Card className="mb-8 bg-primary-50 border border-primary-200 print:hidden">
-          <div className="flex flex-col md:flex-row items-center gap-4">
-            <div className="flex-shrink-0">
-              <div className="w-14 h-14 bg-primary-600 rounded-full flex items-center justify-center">
-                <MessageSquare className="h-7 w-7 text-white" />
-              </div>
-            </div>
-            <div className="flex-grow text-center md:text-left">
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                Have Questions About Your Results?
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Chat with our AI health assistant to better understand your results and get 
-                personalized guidance on next steps.
-              </p>
-            </div>
-            <div className="flex-shrink-0">
-              <Button onClick={handleStartChat} rightIcon={<MessageSquare className="h-4 w-4" />}>
-                Chat with AI Assistant
-              </Button>
-            </div>
-          </div>
         </Card>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center print:hidden">
